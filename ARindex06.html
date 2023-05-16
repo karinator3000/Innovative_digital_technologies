@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+<head>
+    <script src="aframe/aframe.min.js"></script>
+    <script src="AR.js-master/aframe/build/aframe-ar.js"></script>
+</head>
+<script>
+        let markerVisible = { A: false, B: false, C: false, D: false }; 
+        AFRAME.registerComponent('registerevents', { //обробник подій
+            init() {
+                const marker = this.el;
+                marker.addEventListener('markerFound', () => { //знаходження маркеру
+                    markerVisible[ marker.id ] = true;
+                });
+                marker.addEventListener('markerLost', () => { //втрати маркеру
+                    markerVisible[ marker.id ] = false;
+                });
+            }
+        });
+
+        AFRAME.registerComponent('run', {
+            init() { //початкова функція
+                this.A = document.querySelector("#A"); //посилання на вершини п'ятикутника
+                this.B = document.querySelector("#B");
+                this.C = document.querySelector("#C");
+                this.D = document.querySelector("#D");
+                this.F = document.querySelector("#F");
+                this.p0 = new THREE.Vector3(); //координатні вектори
+                this.p1 = new THREE.Vector3();
+                this.p2 = new THREE.Vector3();
+                this.p3 = new THREE.Vector3();
+                this.p4 = new THREE.Vector3();
+                let material = new THREE.MeshLambertMaterial(
+                    {color:0xFF0000});
+                let geometry=new THREE.CylinderGeometry(0.05, 0.05, 1, 12);
+                geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+                geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
+                this.cylinderAB = new THREE.Mesh(geometry, material);
+                this.lineAB = document.querySelector('#lineAB').object3D; //побудова відрізків, сторін многокутника
+                this.lineAB.add(this.cylinderAB);
+                this.cylinderAB.visible = false; // якщо маркер точки зникає, відрізки приховуються
+                this.cylinderBC = new THREE.Mesh(geometry, material);
+                this.lineBC = document.querySelector('#lineBC').object3D;
+                this.lineBC.add(this.cylinderBC);
+                this.cylinderBC.visible = false;
+                this.cylinderAC = new THREE.Mesh(geometry, material);
+                this.lineAC = document.querySelector('#lineAC').object3D;
+                this.lineAC.add(this.cylinderAC);
+                this.cylinderAC.visible = false;
+                this.cylinderAD = new THREE.Mesh(geometry, material);
+                this.lineAD = document.querySelector('#lineAD').object3D;
+                this.lineAD.add(this.cylinderAD);
+                this.cylinderAD.visible = false;
+                this.cylinderCF = new THREE.Mesh(geometry, material);
+                this.lineCF = document.querySelector('#lineCF').object3D;
+                this.lineCF.add(this.cylinderCF);
+                this.cylinderCF.visible = false;
+                this.cylinderDF = new THREE.Mesh(geometry, material);
+                this.lineDF = document.querySelector('#lineDF').object3D;
+                this.lineDF.add(this.cylinderDF);
+                this.cylinderDF.visible = false;
+
+            },
+            tick(time, deltaTime) { //періодична функція
+                if (markerVisible["A"] && markerVisible["B"]) { //які маркери детектовані
+                    this.A.object3D.getWorldPosition(this.p0);
+                    this.B.object3D.getWorldPosition(this.p1);
+                    let distance = this.p0.distanceTo( this.p1 );
+                    this.lineAB.lookAt(this.p1);
+                    this.cylinderAB.scale.set(1, 1, distance);
+                    this.cylinderAB.visible = true;
+                }
+                if (markerVisible["B"] && markerVisible["C"]) {
+                    this.B.object3D.getWorldPosition(this.p1);
+                    this.C.object3D.getWorldPosition(this.p2);
+                    let distance = this.p1.distanceTo( this.p2 );
+                    this.lineBC.lookAt(this.p2);
+                    this.cylinderBC.scale.set(1, 1, distance);
+                    this.cylinderBC.visible = true;
+                }
+                if (markerVisible["A"] && markerVisible["C"]) {
+                    this.A.object3D.getWorldPosition(this.p0);
+                    this.C.object3D.getWorldPosition(this.p2);
+                    let distance = this.p2.distanceTo(this.p0);
+                    this.lineAC.lookAt(this.p0);
+                    this.cylinderAC.scale.set(1, 1, distance);
+                    this.cylinderAC.visible = true;
+                }
+                if (markerVisible["A"] && markerVisible["D"]) {
+                    this.A.object3D.getWorldPosition(this.p0);
+                    this.D.object3D.getWorldPosition(this.p3);
+                    let distance = this.p0.distanceTo(this.p3);
+                    this.lineAD.lookAt(this.p0);
+                    this.cylinderAD.scale.set(1, 1, distance);
+                    this.cylinderAD.visible = true;
+                }
+                if (markerVisible["D"] && markerVisible["F"]) {
+                    this.D.object3D.getWorldPosition(this.p3);
+                    this.F.object3D.getWorldPosition(this.p4);
+                    let distance = this.p3.distanceTo(this.p4);
+                    this.lineDF.lookAt(this.p3);
+                    this.cylinderDF.scale.set(1, 1, distance);
+                    this.cylinderDF.visible = true;
+                }
+                if (markerVisible["C"] && markerVisible["F"]) {
+                    this.C.object3D.getWorldPosition(this.p2);
+                    this.F.object3D.getWorldPosition(this.p4);
+                    let distance = this.p2.distanceTo(this.p4);
+                    this.lineCF.lookAt(this.p2);
+                    this.cylinderCF.scale.set(1, 1, distance);
+                    this.cylinderCF.visible = true;
+                }
+                if (!markerVisible["A"])
+                    this.cylinderAB.visible = this.cylinderAC.visible = false;
+                if (!markerVisible["B"])
+                    this.cylinderAB.visible = this.cylinderBC.visible = false;
+                if (!markerVisible["C"])
+                    this.cylinderAC.visible = this.cylinderBC.visible = false;
+                if (!markerVisible["D"])
+                    this.cylinderAD.visible = this.cylinderDF.visible = false;
+                if (!markerVisible["F"])
+                    this.cylinderDF.visible = this.cylinderCF.visible = false;
+            }
+        });
+    </script>
+    <body>
+    <!--сфера привязана до маркеру--->
+    <a-scene embedded vr-mode-ui="enabled: false;"
+             arjs="debugUIEnabled: false; detectionMode: mono_and_matrix;">
+        <a-marker type="pattern"
+                  url="https://raw.githubusercontent.com/jeromeetienne/AR.js/master/data/multimarkers/multi-abcdef/patt.a" 
+                  id="A" registerevents>
+            <a-sphere radius="0.10" color="red"></a-sphere>
+            <a-entity id="lineAB"></a-entity>
+        </a-marker>
+        <a-marker type="pattern"
+                  url="https://raw.githubusercontent.com/jeromeetienne/AR.js/master/data/multimarkers/multi-abcdef/patt.b"
+                  id="B" registerevents>
+            <a-sphere radius="0.10" color="red"></a-sphere>
+            <a-entity id="lineBC"></a-entity>
+        </a-marker>
+        <a-marker type="pattern"
+                  url="https://raw.githubusercontent.com/jeromeetienne/AR.js/master/data/multimarkers/multi-abcdef/patt.c"
+                  id="C" registerevents>
+            <a-sphere radius="0.10" color="red"></a-sphere>
+            <a-entity id="lineAC"></a-entity>
+        </a-marker>
+        <a-marker type="pattern"
+                  url="https://raw.githubusercontent.com/jeromeetienne/AR.js/master/data/multimarkers/multi-abcdef/patt.d"
+                  id="D" registerevents>
+            <a-sphere radius="0.10" color="red"></a-sphere>
+            <a-entity id="lineAD"></a-entity>
+            <a-entity id="lineDC"></a-entity>
+        </a-marker>
+        <a-marker type="pattern"
+                  url="https://raw.githubusercontent.com/jeromeetienne/AR.js/master/data/multimarkers/multi-abcdef/patt.f"
+                  id="F" registerevents>
+            <a-sphere radius="0.10" color="red"></a-sphere>
+            <a-entity id="lineCF"></a-entity>
+            <a-entity id="lineDF"></a-entity>
+        </a-marker>
+        <a-entity camera></a-entity>
+        <a-entity run></a-entity>
+    </a-scene>
+</body>
+</html>
