@@ -1,0 +1,20 @@
+<!DOCTYPE html> 
+<html>
+<canvas id="Canvas"></canvas> <!--створення графіки засобами JS-->
+	<script src="three.js-dev/build/three.js"></script> <!--підключення бібліотеки-->
+	<script>
+	var renderer=new THREE.WebGLRenderer({canvas: document.getElementById('Canvas'), antialias: true});	//створення рендерер - відображення 3Д моделі на полотні
+	renderer.setClearColor(0xCBEFFF); //фоновий колір
+	renderer.setPixelRatio(window.devicePixelRatio); //співвідношення пікселів до значення вікна браузера
+	renderer.setSize(window.innerWidth, window.innerHeight); //розширення полотна до висоти-ширини поточного вікна
+	var camera=new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000); //камера
+	var scene=new THREE.Scene(); //створення сцени
+	function render()
+	{
+		renderer.render(scene, camera); //виклик функціїї - початок процесу анімації
+		requestAnimationFrame(render);
+	}
+	render();
+	</script>
+</body>
+</html>
