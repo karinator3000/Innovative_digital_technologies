@@ -1,0 +1,84 @@
+<!DOCTYPE html> 
+<html>
+<canvas id="Canvas"></canvas>
+<script src="three.js-dev/build/three.js"></script>
+<script>
+var renderer=new THREE.WebGLRenderer({canvas: document.getElementById('Canvas'), antialias: true});	
+renderer.setClearColor(0xCBEFFF);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+var camera=new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000);
+var scene=new THREE.Scene();
+var pyramidgeometry=new THREE.CylinderGeometry(0, 0.8, 2, 4); //конструктор класу для створення піраміди
+var pyramidmaterial=new THREE.MeshLambertMaterial({color: 0xF3FFE2}); //матеріал що відбиває промені
+var pyramidmesh=new THREE.Mesh(pyramidgeometry, pyramidmaterial); //комбінуємо геометрію та матеріал
+pyramidmesh.position.set(0, 2, -10); //зміна позиції по координатам
+scene.add(pyramidmesh); //розміщення на сцені
+var lightOne=new THREE.AmbientLight(0xffff, 0.5); //розсіяне джерело світла
+scene.add(lightOne);
+var lightTwo=new THREE.PointLight(0xffff, 0.5); //точкове джерело світла
+scene.add(lightTwo);
+var boxgeometry=new THREE.BoxGeometry(1, 1, 1); //додання паралелепіпеда
+var boxmaterial=new THREE.MeshNormalMaterial({ //заміна матеріалу для паралелепіпеда з червоним кольором
+color: 0xFF0000,
+transparent: true,
+opacity: 1
+});
+var boxmesh=new THREE.Mesh(boxgeometry, boxmaterial);
+boxmesh.position.set(-0.9, 0, -6);
+scene.add(boxmesh);
+var spheregeometry=new THREE.SphereGeometry(0.5); //створення сфери з відображенням лініями
+var spherematerial=new THREE.LineBasicMaterial({ //матеріал сфери
+color: 0x888888
+});
+var spheremesh=new THREE.Line(spheregeometry, spherematerial); //лінія основний обєкт що створює сферу
+spheremesh.position.set(0.9, 0, -6);
+scene.add(spheremesh);
+var circlegeometry=new THREE.CircleBufferGeometry(0.5); //створення плаского 2д обєкту
+var circlematerial=new THREE.MeshStandardMaterial({ // матеріал з зеленим кольором
+color: 0x098877,
+roughness: 90.0,
+metalness: 0.2
+});
+var circlemesh=new THREE.Mesh(circlegeometry, circlematerial);
+circlemesh.position.set(2, 0, -6);
+circlemesh.rotation.set(0, 0.5, 0);
+scene.add(circlemesh);
+var paraFunction=function(a, b, vector) //функція обчислює компоненти координатного руху вектору
+{
+var x=-5+5*a;
+var y=-5+5*b;
+var z=(Math.sin(a*Math.PI)+Math.sin(b*Math.PI))*(-7);
+vector.setX(x);
+vector.setY(y);
+vector.setZ(z);
+}
+var parageometry=new THREE.ParametricGeometry(paraFunction, 8, 8);
+var paramaterial=new THREE.MeshBasicMaterial({color: 0xF3FFE2});
+var paramesh=new THREE.Mesh(parageometry, paramaterial);
+paramesh.position.set(0, -2, -100);
+scene.add(paramesh);
+var planegeometry=new THREE.PlaneGeometry(10, 10); //додання обєкту площини
+var planematerial=new THREE.MeshPhongMaterial({ //затемнення площини за Фонгом
+color: 0xF3FFE2,
+specular: 0xFF0000,
+shininess: 50
+});
+var planemesh=new THREE.Mesh(planegeometry, planematerial);
+planemesh.position.set(0, -20, -100);
+scene.add(planemesh);
+var delta=0;
+function render()
+{
+pyramidmesh.rotation.y+=0.1; //нескінчене обертання піраміди навколо своєї верт. осі
+paramesh.rotation.x+=0.1; //анімування обєкту
+paramesh.rotation.y+=0.1;
+planegeometry.rotateZ(-25+Math.sin(delta)*50); //анімація площини
+delta+=0.1;
+renderer.render(scene, camera);
+requestAnimationFrame(render);
+}
+render();
+</script>
+</body>
+</html>
