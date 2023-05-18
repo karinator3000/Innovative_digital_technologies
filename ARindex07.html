@@ -43,7 +43,7 @@
 	scene.add(circlemesh);
 		
 	//якийсь непонятний об'єкт
-	var parageometry=new THREE.ParametricGeometry(paraFuncyion, 8, 8);
+	var parageometry=new THREE.ParametricGeometry(paraFunction, 8, 8);
 	var paramaterial=new THREE.MeshBasicMaterial({color: 0xF3FFE2});
 	var paramesh=new THREE.Mesh(parageometry, paramaterial);
 	paramesh.position.set(0, -2, -100);
