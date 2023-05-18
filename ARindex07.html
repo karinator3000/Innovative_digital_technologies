@@ -9,6 +9,19 @@
 	renderer.setSize(window.innerWidth, window.innerHeight); //розширення полотна до висоти-ширини поточного вікна
 	var camera=new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000); //камера
 	var scene=new THREE.Scene(); //створення сцени
+	//пірамідка, але не хеопса
+	var pyramidgeometry=new THREE.CylinderGeometry(0, 0.8, 2, 4);
+	var pyramidmaterial=new THREE.MeshLambertMaterial({color: 0xF3FFE2});
+	var pyramidmesh=new THREE.Mesh(pyramidgeometry, pyramidmaterial);
+	pyramidmesh.position.set(0, 2, -10);
+	scene.add(pyramidmesh);
+	//свет, не в конце тонеля
+	var lightOne=new THREE.AmbientLight(0xffff, 0.5);
+	scene.add(lightOne);
+	//свет в кінці тунеля
+	var lightTwo=new THREE.PointLight(0xffff, 0.5);
+	scene.add(lightTwo);
+
 	//білий квадратик
 	var boxgeometry=new THREE.BoxGeometry(1, 1, 1);
 	var boxmaterial=new THREE.MeshBasicMaterial();
@@ -21,8 +34,7 @@
 	var spheremesh=new THREE.Mesh(spheregeometry, spherematerial);
 	spheremesh.position.set(0.9, 0, -6);
 	scene.add(spheremesh);
-	
-		
+	//чорний сфера не з палок	
 	var circlegeometry=new THREE.CircleBufferGeometry(0.5);
 	var circlematerial=new THREE.MeshBasicMaterial({color: 0x0000000});
 	var circlemesh=new THREE.Mesh(circlegeometry, circlematerial);
@@ -30,10 +42,18 @@
 	circlemesh.rotation.set(0, 0.5, 0);
 	scene.add(circlemesh);
 
+	var paraFunction=function(a, b)
+	{
+		var x=-5+5*a;
+		var y=-5+5*b;
+		var z=(Math.sin(a*Math.PI)+Math.sin(b*Math.PI))*(-7);
+		return new THREE.Vector3(x, y, z);
+	}
 	function render()
 	{
 		renderer.render(scene, camera); //виклик функціїї - початок процесу анімації
 		requestAnimationFrame(render);
+		pyramidmesh.rotation.y+=0.1; //анімка пірамідки
 	}
 	render();
 	</script>
