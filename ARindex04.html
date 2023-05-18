@@ -8,12 +8,11 @@
       <a-marker preset="hiro">
         <a-box position='0 0.5 0' material='color: red;'></a-box>
       </a-marker>
-      <a-marker preset="kanji">
-        <a-entity plot="function: ((3*x)^2 - (4*y)^2)/4;
-          order: 32;
-          show_zero_planes: true;
-          bounds: -0.5 0.5 -0.5 0.5 -0.5 0.5;
-          color: #04F"> </a-entity>
+      <a-marker preset="kanji" id='marker-kanji' registerevents>
+        <a-box position='0 0.5 0' material='color:blue;' jump></a-box>
+      </a-marker>
+      <a-marker type='barcode' value='6' id='marker-barcode-7'registerevents>
+        <a-sphere position='0 0.5 0' radius="0.5" material='color: green;' jump></a-sphere>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
