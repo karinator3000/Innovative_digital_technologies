@@ -16,5 +16,14 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
+    AFRAME.registerComponent('registerevents', {
+      init: function () {
+      var marker = this.el;
+      marker.addEventListener('markerFound', function() {
+      console.log('markerFound', marker.id); });
+      marker.addEventListener('markerLost', function() {
+      console.log('markerLost', marker.id); });
+      }
+    });
   </body>
 </html> 
