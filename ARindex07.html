@@ -9,6 +9,12 @@
 	renderer.setSize(window.innerWidth, window.innerHeight); //розширення полотна до висоти-ширини поточного вікна
 	var camera=new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000); //камера
 	var scene=new THREE.Scene(); //створення сцени
+	var boxgeometry=new THREE.BoxGeometry(1, 1, 1);
+	var boxmaterial=new THREE.MeshBasicMaterial();
+	var boxmesh=new THREE.Mesh(boxgeometry, boxmaterial);
+	boxmesh.position.set(-0.9, 0, -6);
+	scene.add(boxmesh);
+
 	function render()
 	{
 		renderer.render(scene, camera); //виклик функціїї - початок процесу анімації
