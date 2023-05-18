@@ -25,5 +25,12 @@
       console.log('markerLost', marker.id); });
       }
     });
+    AFRAME.registerComponent('jump', {
+      init: function () {
+      var obj = this.el;
+      obj.addEventListener('click', function () {
+       this.setAttribute('position', (Math.random()-0.5)+ " 0.5 0");
+      });
+    }
   </body>
 </html> 
