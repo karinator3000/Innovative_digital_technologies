@@ -41,7 +41,22 @@
 	circlemesh.position.set(2, 0, -6);
 	circlemesh.rotation.set(0, 0.5, 0);
 	scene.add(circlemesh);
+		
+	//якийсь непонятний об'єкт
+	var parageometry=new THREE.ParametricGeometry(paraFuncyion, 8, 8);
+	var paramaterial=new THREE.MeshBasicMaterial({color: 0xF3FFE2});
+	var paramesh=new THREE.Mesh(parageometry, paramaterial);
+	paramesh.position.set(0, -2, -100);
+	scene.add(paramesh);
 
+	//Додамо до вже створених об’єктів площину
+	var planegeometry=new THREE.PlaneGeometry(10, 10);
+	var planematerial=new THREE.MeshBasicMaterial();
+	var planemesh=new THREE.Mesh(planegeometry, planematerial);
+	planemesh.position.set(0, -20, -100);
+	scene.add(planemesh);
+		
+		
 	var paraFunction=function(a, b)
 	{
 		var x=-5+5*a;
@@ -51,9 +66,12 @@
 	}
 	function render()
 	{
+		pyramidmesh.rotation.y+=0.1; //анімка пірамідки
+		paramesh.rotation.y+=0.1;
+		paramesh.rotation.x+=0.1;
 		renderer.render(scene, camera); //виклик функціїї - початок процесу анімації
 		requestAnimationFrame(render);
-		pyramidmesh.rotation.y+=0.1; //анімка пірамідки
+		
 	}
 	render();
 	</script>
